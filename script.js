@@ -23,11 +23,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const bookElement = document.createElement("p");
             bookElement.textContent = `Title: ${book.title},  Author: ${book.author}, Pages: ${book.pages}`;
             booksContainer.appendChild(bookElement);
+
+            // Add remoove button
+            const remove = document.createElement("button");
+            remove.textContent="Remove book";
+            remove.style.marginLeft="10px";
+            bookElement.appendChild(remove);
         });
     }
 
 
     const addBook = document.getElementById("addBook");
+    addBook.style.marginTop="2%";
     addBook.addEventListener("click", () => {
 
         const form = document.createElement("form");
@@ -59,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const submit = document.createElement("input");
         submit.setAttribute("type", "submit");
+        submit.style.marginLeft="10px";
 
         formElement.appendChild(submit);
 
