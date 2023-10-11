@@ -1,16 +1,23 @@
 const myLibrary = [];
 
-function Book(title, author, pages) {
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
+
+class Book {
+    constructor(title, author, pages, read) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.read = read || false;
+    }
 }
 
-function addToLibrary(title, author, pages) {
-    myLibrary.push(new Book(title, author, pages));
+Book.prototype.toggleReadStatus = function() {
+    this.read = !this.read;
+}
+ 
+function addToLibrary(title, author, pages, read) {
+    myLibrary.push(new Book(title, author, pages, read));
 }
 
-console.log(myLibrary);
 
 document.addEventListener('DOMContentLoaded', function() {
     function displayLibrary() {
@@ -19,9 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
         books.innerHTML = "";
 
         const booksContainer = document.getElementById("books");
-        myLibrary.forEach((book) => {
+        myLibrary.forEach((book, index) => {
             const bookElement = document.createElement("p");
-            bookElement.textContent = `Title: ${book.title},  Author: ${book.author}, Pages: ${book.pages}`;
+            bookElement.textContent = `Title: ${book.title},  Author: ${book.author}, Pages: ${book.pages}, Read: ${book.read ? 'Yes' : 'No'}`;
             booksContainer.appendChild(bookElement);
 
             // Add remoove button
@@ -29,6 +36,22 @@ document.addEventListener('DOMContentLoaded', function() {
             remove.textContent="Remove book";
             remove.style.marginLeft="10px";
             bookElement.appendChild(remove);
+
+            remove.addEventListener("click", () => {
+                bookElement.remove();
+
+                myLibrary.splice(index, 1);
+            });
+
+            const toggleRead = document.createElement("button");
+            toggleRead.textContent = book.read ? "Mark as Unread" : "Mark as Read";
+            toggleRead.style.marginLeft = "10px";
+            bookElement.appendChild(toggleRead);
+
+            toggleRead.addEventListener("click", () => {
+                book.toggleReadStatus(); // Toggle the read status
+                displayLibrary();
+            });
         });
     }
 
@@ -84,13 +107,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Call the function to add the book to the library
             addToLibrary(titleValue, authorValue, pagesValue);
-            
-            console.log( titleInput.value)
+          
              // Clear the form input fields
              titleInput.value = "";
              authorInput.value = "";
              pagesInput.value = "";
-             console.log( titleInput.value)
+           
             // Redisplay the updated library
             displayLibrary();
         });
